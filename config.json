@@ -1,0 +1,6 @@
+{
+	"baseUrl": "http://localhost/projects/",
+	"port": "8001",
+	"proxy": "",
+	"data": "/home/georg/www/projects"
+}
