@@ -6,16 +6,18 @@ import (
 	"os"
 )
 
-const timeLayout = "2006-01-02 15:04:05.999"
+const timeLayout string = "2006-01-02 15:04:05"
+
+func now() string {
+	return time.Now().Format(timeLayout)
+}
 
 func stdOut(message string, args ...interface {}) {
-	t := time.Now().Format(timeLayout)
-	fmt.Printf(t + " " + message + "\n", args...);
+	fmt.Printf(now() + " " + message + "\n", args...);
 }
 
 func stdErr(message string, args ...interface {}) {
-	t := time.Now().Format(timeLayout)
-	fmt.Fprintf(os.Stderr, t + " " + message + "\n", args...)
+	fmt.Fprintf(os.Stderr, now() + " " + message + "\n", args...)
 }
 
 func Debug(message string, args ...interface {}) {
