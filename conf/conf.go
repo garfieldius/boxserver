@@ -14,6 +14,7 @@ type Config struct {
 	Proxy string
 	Port string
 	Data string
+	Cors string
 }
 
 func init() {

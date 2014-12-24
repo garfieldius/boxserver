@@ -3,9 +3,9 @@ package server
 import (
 	c "github.com/trenker/boxserver/conf"
 	"github.com/trenker/boxserver/log"
+	"github.com/trenker/boxserver/util"
 	"net/http"
 	"strings"
-	"errors"
 	"encoding/json"
 )
 
@@ -23,13 +23,19 @@ type Message struct {
 var errorMessage []byte
 
 func init() {
-	errorMessage, _ = json.Marshal(&Message{Message: errors.New("Unknown resource")})
+	errorMessage, _ = json.MarshalIndent(util.Str("Unknown resource"), "", "  ")
 }
 
 func (r *request) Process(res http.ResponseWriter) {
 
 	h := res.Header()
 	h["Content-Type"] = []string{"application/json;charset=UTF-8"}
+	cors := c.Get().Cors
+
+	if cors != "" {
+		h["Access-Control-Allow-Origin"] = []string{cors}
+	}
+
 	res.WriteHeader(r.status)
 
 	if !r.omitContent && r.content != nil {
