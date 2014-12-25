@@ -53,7 +53,11 @@ func NewRequest(req *http.Request) *request {
 
 	log.Debug("Requested %s %s", req.Method, path)
 
+
 	switch req.Method {
+		case "PUT":
+			content, status = handlePut(path, req)
+			break
 		default:
 			content, status = handleGet(path)
 
