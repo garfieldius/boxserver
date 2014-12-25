@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/trenker/boxserver/data"
 	"regexp"
 )
 
@@ -18,4 +19,9 @@ func ValidKey(key string) bool {
 
 func ValidVersion(version string) bool {
 	return validVersion.Match(([]byte)(version))
+}
+
+func ValidProvider(provider string) bool {
+	_, err := data.ProviderByName(provider)
+	return err == nil
 }
