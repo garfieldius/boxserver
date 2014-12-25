@@ -1,5 +1,9 @@
 package data
 
+import (
+	"errors"
+)
+
 type VagrantProvider string
 
 const (
@@ -24,6 +28,17 @@ type Box struct {
 type Project struct {
 	Name string
 	Boxes []Box
+}
+
+func ProviderByName(name string) (VagrantProvider, error) {
+	switch name {
+		case "virtualbox":
+			return Virtualbox, nil
+		case "vmware":
+			return Vmware, nil
+	}
+
+	return Virtualbox, errors.New("No such provider")
 }
 
 func (d *Data) addProject(project Project) *Project {
