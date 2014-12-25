@@ -8,7 +8,7 @@ type VagrantProvider string
 
 const (
 	Virtualbox VagrantProvider = "virtualbox"
-	Vmware VagrantProvider = "vmware"
+	Vmware     VagrantProvider = "vmware"
 )
 
 type Data struct {
@@ -16,26 +16,26 @@ type Data struct {
 }
 
 type Version struct {
-	Version string
+	Version   string
 	Providers []VagrantProvider
 }
 
 type Box struct {
-	Name string
+	Name     string
 	Versions []Version
 }
 
 type Project struct {
-	Name string
+	Name  string
 	Boxes []Box
 }
 
 func ProviderByName(name string) (VagrantProvider, error) {
 	switch name {
-		case "virtualbox":
-			return Virtualbox, nil
-		case "vmware":
-			return Vmware, nil
+	case "virtualbox":
+		return Virtualbox, nil
+	case "vmware":
+		return Vmware, nil
 	}
 
 	return Virtualbox, errors.New("No such provider")
@@ -43,12 +43,12 @@ func ProviderByName(name string) (VagrantProvider, error) {
 
 func (d *Data) addProject(project Project) *Project {
 	d.Projects = append(d.Projects, project)
-	return &d.Projects[d.Len() - 1]
+	return &d.Projects[d.Len()-1]
 }
 
 func (d *Data) getProject(name string) *Project {
 	for i, p := range d.Projects {
-		if (p.Name == name) {
+		if p.Name == name {
 			return &d.Projects[i]
 		}
 	}
@@ -61,7 +61,7 @@ func (d *Data) Len() int {
 
 func (p *Project) addBox(box Box) *Box {
 	p.Boxes = append(p.Boxes, box)
-	return &p.Boxes[len(p.Boxes) - 1]
+	return &p.Boxes[len(p.Boxes)-1]
 }
 
 func (p *Project) getBox(box string) *Box {
@@ -79,7 +79,7 @@ func (b *Box) Len() int {
 
 func (b *Box) addVersion(version Version) *Version {
 	b.Versions = append(b.Versions, version)
-	return &b.Versions[len(b.Versions) - 1]
+	return &b.Versions[len(b.Versions)-1]
 }
 
 func (b *Box) getVersion(version string) *Version {
@@ -97,5 +97,5 @@ func (v *Version) Len() int {
 
 func (v *Version) addProvider(provider VagrantProvider) *VagrantProvider {
 	v.Providers = append(v.Providers, provider)
-	return &v.Providers[len(v.Providers) - 1]
+	return &v.Providers[len(v.Providers)-1]
 }

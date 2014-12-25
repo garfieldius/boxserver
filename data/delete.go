@@ -2,7 +2,6 @@ package data
 
 import "errors"
 
-
 func DeleteProject(projectName string) error {
 	newProjects := make([]Project, 0)
 	found := false

@@ -2,10 +2,10 @@ package data
 
 import (
 	"github.com/trenker/boxserver/log"
-	"path/filepath"
 	"os"
-	"strings"
+	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 var data *Data
@@ -20,14 +20,14 @@ func init() {
 
 	findComponents = regexp.MustCompile(
 		`^` +
-		validKey +
-		divider +
-		validKey +
-		divider +
-		validVersion +
-		divider +
-		allowedBoxes +
-		`\.box$`)
+			validKey +
+			divider +
+			validKey +
+			divider +
+			validVersion +
+			divider +
+			allowedBoxes +
+			`\.box$`)
 }
 
 func readFile(path string, info os.FileInfo, err error) error {
@@ -53,7 +53,7 @@ func AddFromPath(path string, info os.FileInfo) {
 
 			log.Debug("Found box %s", parts)
 
-			providerName  := (VagrantProvider)(parts[3])
+			providerName := (VagrantProvider)(parts[3])
 
 			var p *Project
 			var b *Box

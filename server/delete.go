@@ -1,10 +1,10 @@
 package server
 
 import (
-	"github.com/trenker/boxserver/util"
-	"github.com/trenker/boxserver/log"
-	"github.com/trenker/boxserver/data"
 	"github.com/trenker/boxserver/conf"
+	"github.com/trenker/boxserver/data"
+	"github.com/trenker/boxserver/log"
+	"github.com/trenker/boxserver/util"
 	"net/http"
 	"os"
 )
@@ -18,7 +18,7 @@ func handleDelete(path []string) (util.Message, int) {
 
 		if len(path) > 1 {
 
-			if (util.ValidKey(path[1])) {
+			if util.ValidKey(path[1]) {
 
 				filePath = util.Join(filePath, path[1])
 
@@ -28,11 +28,11 @@ func handleDelete(path []string) (util.Message, int) {
 
 						filePath = util.Join(filePath, path[2])
 
-						if (len(path) > 3) {
+						if len(path) > 3 {
 
 							if util.ValidProvider(path[3]) {
 
-								filePath = util.Join(filePath, path[3] + ".box")
+								filePath = util.Join(filePath, path[3]+".box")
 								provider, _ := data.ProviderByName(path[3])
 
 								err := data.DeleteProvider(path[0], path[1], path[2], provider)

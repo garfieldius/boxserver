@@ -1,20 +1,20 @@
 package server
 
 import (
-	"github.com/trenker/boxserver/log"
-	"github.com/trenker/boxserver/data"
-	"github.com/trenker/boxserver/util"
 	"github.com/trenker/boxserver/conf"
-	"net/http"
-	"strings"
+	"github.com/trenker/boxserver/data"
+	"github.com/trenker/boxserver/log"
+	"github.com/trenker/boxserver/util"
 	"io"
+	"net/http"
 	"os"
+	"strings"
 )
 
 type pendingFile struct {
 	targetPath string
-	srcPath string
-	name string
+	srcPath    string
+	name       string
 }
 
 func handlePut(parts []string, req *http.Request) (util.Message, int) {
@@ -40,7 +40,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 
 		log.Debug("Parts has three, expecting a from src copy")
 
-		src := strings.Split(req.FormValue("source"), "/");
+		src := strings.Split(req.FormValue("source"), "/")
 
 		log.Debug("copy from given source %s => %s", req.FormValue("source"), src)
 
@@ -63,7 +63,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		for _, b := range srcBox {
 			if b.Version == src[3] {
 				srcVersion = &b
-				break;
+				break
 			}
 		}
 
@@ -78,16 +78,16 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 
 			f := pendingFile{
 				targetPath: util.Join(conf.Get().Data, parts[0], parts[1], parts[2]),
-				srcPath: util.Join(conf.Get().Data, src[0], src[1], src[2]),
-				name: providerfile,
+				srcPath:    util.Join(conf.Get().Data, src[0], src[1], src[2]),
+				name:       providerfile,
 			}
 
 			if util.FileExists(util.Join(f.targetPath, f.name)) {
-				return  util.Str("Box file already exists"), status
+				return util.Str("Box file already exists"), status
 			}
 
 			if util.FileExists(util.Join(f.srcPath, f.name)) {
-				return  util.Str("Source Box file not found"), status
+				return util.Str("Source Box file not found"), status
 			}
 
 			files[i] = f
@@ -99,7 +99,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			err := os.MkdirAll(file.targetPath, (os.FileMode)(0755))
 
 			if err != nil {
-				log.Error("Creating directory %s: %s", file.targetPath, err);
+				log.Error("Creating directory %s: %s", file.targetPath, err)
 				return util.Str("Cannot create target directory"), http.StatusInternalServerError
 			}
 
@@ -110,7 +110,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			defer src.Close()
 
 			if err != nil {
-				log.Error("Open Source file %s: %s", srcFile, err);
+				log.Error("Open Source file %s: %s", srcFile, err)
 				return util.Str("Cannot open source file"), http.StatusInternalServerError
 			}
 
@@ -118,14 +118,14 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			defer dst.Close()
 
 			if err != nil {
-				log.Error("Create target file %s: %s", dstFile, err);
+				log.Error("Create target file %s: %s", dstFile, err)
 				return util.Str("Cannot open target file"), http.StatusInternalServerError
 			}
 
 			_, err = io.Copy(dst, src)
 
 			if err != nil {
-				log.Error("Copy from %s to %s: %s", srcFile, dstFile, err);
+				log.Error("Copy from %s to %s: %s", srcFile, dstFile, err)
 				return util.Str("Cannot copy to target file"), http.StatusInternalServerError
 			}
 
@@ -182,7 +182,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		}
 		defer dst.Close()
 
-		src, err :=  srcH.Open()
+		src, err := srcH.Open()
 
 		if err != nil {
 			log.Error("Cannot open uploaded file %s: %s", srcH, err)
@@ -193,7 +193,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		_, err = io.Copy(dst, src)
 
 		if err != nil {
-			log.Error("Copy from %s to %s: %s", srcH, dstFile, err);
+			log.Error("Copy from %s to %s: %s", srcH, dstFile, err)
 			return util.Str("Cannot copy to target file"), http.StatusInternalServerError
 		}
 

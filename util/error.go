@@ -5,7 +5,7 @@ import (
 )
 
 type Message struct {
-	Message string `json:"msg"`
+	Message string `json:"msg,string"`
 }
 
 func Str(message string) Message {

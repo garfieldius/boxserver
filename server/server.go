@@ -1,29 +1,19 @@
 package server
 
 import (
+	"encoding/json"
 	c "github.com/trenker/boxserver/conf"
 	"github.com/trenker/boxserver/log"
 	"github.com/trenker/boxserver/util"
 	"net/http"
 	"strings"
-	"encoding/json"
 )
 
 type request struct {
-	content interface {}
+	content     interface{}
 	omitContent bool
-	status int
-	parts []string
-}
-
-type Message struct {
-	Message error `json:"msg,string"`
-}
-
-var errorMessage []byte
-
-func init() {
-	errorMessage, _ = json.MarshalIndent(util.Str("Unknown resource"), "", "  ")
+	status      int
+	parts       []string
 }
 
 func (r *request) Process(res http.ResponseWriter) {
@@ -38,52 +28,39 @@ func (r *request) Process(res http.ResponseWriter) {
 
 	res.WriteHeader(r.status)
 
-	if !r.omitContent && r.content != nil {
+	if !r.omitContent {
 		body, _ := json.MarshalIndent(r.content, "", "  ")
 		res.Write(body)
 	}
 }
 
 func NewRequest(req *http.Request) *request {
-	hasContent := req.Method == "HEAD"
+
 	path := strings.Split(strings.Trim(strings.TrimPrefix(req.URL.Path, c.Get().Proxy), "/"), "/")
 
-	var content interface {}
-	var status int = http.StatusNotFound
+	var content interface{} = util.Str("Unsupported request type")
+	status := http.StatusBadRequest
 
-	log.Debug("Requested %s %s", req.Method, path)
+	log.Debug("Requested '%s' %s", req.Method, path)
 
-
-	switch req.Method {
-		case "PUT":
-			content, status = handlePut(path, req)
-			break
-
-		case "DELETE":
-			content, status = handleDelete(path)
-			break
-
-		case "":
-		case "GET":
-		case "HEAD":
-			content, status = handleGet(path)
+	if req.Method == "PUT" {
+		log.Debug("Handle PUT")
+		content, status = handlePut(path, req)
 	}
 
-	var r request
-
-	if content != nil {
-		r = request{
-			omitContent: hasContent,
-			status: status,
-			content: content,
-		}
-	} else {
-		r = request{
-			omitContent: hasContent,
-			status: http.StatusBadRequest,
-			content: errorMessage,
-		}
+	if req.Method == "DELETE" {
+		log.Debug("Handle DELETE")
+		content, status = handleDelete(path)
 	}
 
-	return &r
+	if req.Method == "GET" || req.Method == "HEAD" || req.Method == "" {
+		log.Debug("Handle GET")
+		content, status = handleGet(path)
+	}
+
+	return &request{
+		omitContent: req.Method == "HEAD",
+		status:      status,
+		content:     content,
+	}
 }

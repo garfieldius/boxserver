@@ -1,20 +1,20 @@
 package conf
 
 import (
+	"encoding/json"
 	"github.com/trenker/boxserver/log"
 	"github.com/trenker/boxserver/util"
 	"io/ioutil"
-	"encoding/json"
 )
 
 var mainConfig *Config
 
 type Config struct {
 	BaseUrl string
-	Proxy string
-	Port string
-	Data string
-	Cors string
+	Proxy   string
+	Port    string
+	Data    string
+	Cors    string
 }
 
 func init() {
@@ -31,7 +31,6 @@ func Load(filename string) *Config {
 		log.Debug("No config argument given, using default %s", filename)
 	}
 
-
 	if !util.FileExists(filename) {
 		log.Critical("Cannot read config file")
 	}
@@ -47,7 +46,6 @@ func Load(filename string) *Config {
 	if err != nil {
 		log.Critical("Cannot parse config %s", err)
 	}
-
 
 	return mainConfig
 }

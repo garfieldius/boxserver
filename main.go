@@ -1,11 +1,11 @@
 package main
 
 import (
+	"flag"
+	"github.com/trenker/boxserver/conf"
 	"github.com/trenker/boxserver/data"
 	"github.com/trenker/boxserver/log"
-	"github.com/trenker/boxserver/conf"
 	"github.com/trenker/boxserver/server"
-	"flag"
 	"net/http"
 )
 
@@ -28,11 +28,10 @@ func main() {
 		server.NewRequest(req).Process(res)
 	}))
 
-
 	port := conf.Get().Port
 	log.Debug("Listen on port %s", port)
 
-	err := http.ListenAndServe(":" + port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 
 	if err != nil {
 		log.Critical("Cannot listen to requests, %s", err)

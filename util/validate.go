@@ -10,7 +10,7 @@ var validVersion *regexp.Regexp
 
 func init() {
 	validIdentifier = regexp.MustCompile(`^[a-z0-9][a-z0-9_\-\.]+[a-z0-9]$`)
-	validVersion    = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+$`)
+	validVersion = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+$`)
 }
 
 func ValidKey(key string) bool {
