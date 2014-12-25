@@ -31,15 +31,28 @@ func init() {
 }
 
 func readFile(path string, info os.FileInfo, err error) error {
+
 	if err != nil {
 		return err
 	}
 
+	AddFromPath(path, info)
+
+	return nil
+}
+
+func AddFromPath(path string, info os.FileInfo) {
+
 	if !info.IsDir() && len(path) > len(prefix) {
+
 		path = strings.TrimPrefix(path, prefix)
+
 		if findComponents.MatchString(path) {
 
 			parts := strings.Split(strings.TrimSuffix(path, ".box"), "/")
+
+			log.Debug("Found box %s", parts)
+
 			providerName  := (VagrantProvider)(parts[3])
 
 			var p *Project
@@ -69,7 +82,6 @@ func readFile(path string, info os.FileInfo, err error) error {
 			v.addProvider(providerName)
 		}
 	}
-	return nil
 }
 
 func Initialize(basePath string) *Data {
