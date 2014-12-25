@@ -58,9 +58,15 @@ func NewRequest(req *http.Request) *request {
 		case "PUT":
 			content, status = handlePut(path, req)
 			break
-		default:
-			content, status = handleGet(path)
 
+		case "DELETE":
+			content, status = handleDelete(path)
+			break
+
+		case "":
+		case "GET":
+		case "HEAD":
+			content, status = handleGet(path)
 	}
 
 	var r request
