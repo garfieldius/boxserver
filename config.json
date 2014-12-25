@@ -1,7 +1,7 @@
 {
-	"baseUrl": "http://localhost/projects/",
+	"baseUrl": "http://localhost/boxdata/",
 	"port": "8001",
 	"proxy": "",
-	"data": "/home/georg/www/projects",
+	"data": "/www/boxdata",
 	"cors": "*"
 }
