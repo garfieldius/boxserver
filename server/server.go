@@ -43,8 +43,8 @@ func NewRequest(req *http.Request) *request {
 
 	log.Debug("Requested '%s' %s", req.Method, path)
 
-	if req.Method == "PUT" {
-		log.Debug("Handle PUT")
+	if req.Method == "PUT" || req.Method == "POST" {
+		log.Debug("Handle PUT/POST")
 		content, status = handlePut(path, req)
 	}
 
