@@ -53,13 +53,17 @@ func NewRequest(req *http.Request) *request {
 		content, status = handleDelete(path)
 	}
 
+	if req.Method == "OPTIONS" {
+		status = http.StatusOK
+	}
+
 	if req.Method == "GET" || req.Method == "HEAD" || req.Method == "" {
 		log.Debug("Handle GET")
 		content, status = handleGet(path)
 	}
 
 	return &request{
-		omitContent: req.Method == "HEAD",
+		omitContent: req.Method == "HEAD" || req.Method == "OPTIONS",
 		status:      status,
 		content:     content,
 	}
