@@ -24,6 +24,7 @@ func (r *request) Process(res http.ResponseWriter) {
 
 	if cors != "" {
 		h["Access-Control-Allow-Origin"] = []string{cors}
+		h["Access-Control-Allow-Methods"] = []string{"POST, PUT, GET, OPTIONS, DELETE"}
 	}
 
 	res.WriteHeader(r.status)
