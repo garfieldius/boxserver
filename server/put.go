@@ -32,7 +32,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		return util.Str("Not a valid box name"), status
 	}
 
-	if !util.ValidVersion(parts[3]) {
+	if !util.ValidVersion(parts[2]) {
 		return util.Str("Not a valid box version"), status
 	}
 
@@ -52,22 +52,28 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			return util.Str("Not a valid source ID"), status
 		}
 
-		srcBox, _ := data.VersionsOfBox(src[0], src[1])
+		versionsOfBox, err := data.VersionsOfBox(src[0], src[1])
+		log.Debug("Got versions for %s/%s: [%s] %s", src[0], src[1], len(versionsOfBox), versionsOfBox)
 
-		if srcBox == nil {
+		if err != nil {
+			log.Error("Cannot copy %s/%s, not found %s", src[0], src[1], err)
 			return util.Str("Source box not found"), http.StatusNotFound
 		}
 
-		var srcVersion *data.Version = nil
+		var srcVersion data.Version
+		foundVersion := false
 
-		for _, b := range srcBox {
-			if b.Version == src[3] {
-				srcVersion = &b
+		for _, b := range versionsOfBox {
+			log.Debug("Check version %s to match %s", b.Version, src[2])
+			if b.Version == src[2] {
+				log.Debug("Found %s", b)
+				srcVersion = b
+				foundVersion = true
 				break
 			}
 		}
 
-		if srcVersion == nil {
+		if foundVersion == false {
 			return util.Str("Source version not found"), http.StatusNotFound
 		}
 
@@ -82,11 +88,13 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 				name:       providerfile,
 			}
 
+			log.Debug("Need to copy %s to %s", util.Join(f.srcPath, f.name), util.Join(f.targetPath, f.name))
+
 			if util.FileExists(util.Join(f.targetPath, f.name)) {
 				return util.Str("Box file already exists"), status
 			}
 
-			if util.FileExists(util.Join(f.srcPath, f.name)) {
+			if !util.FileExists(util.Join(f.srcPath, f.name)) {
 				return util.Str("Source Box file not found"), status
 			}
 
@@ -139,7 +147,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			data.AddFromPath(dstFile, info)
 		}
 
-		return util.Str("Box created"), http.StatusOK
+		return util.Str("Box copied"), http.StatusOK
 	}
 
 	if len(parts) == 4 {
