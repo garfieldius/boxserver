@@ -50,7 +50,7 @@ eg.: If you configure nginx like this:
 
 ```nginx
 location /vagrant {
-	proxy_pass http://127.0.0.1;
+	proxy_pass http://127.0.0.1:8001;
 }
 ```
 
@@ -68,7 +68,7 @@ If you have a box, send it to the boxserver with curl. The URL path must have th
 
 `[PROJECT|USER]/[BOX]/[VERSION]/[PROVIDER]`
 
-eg.: Create a new box called `test/demo` for virtualbox, run this:
+eg.: to create a new box called `test/demo` for virtualbox, run this:
 
 ```bash
 curl -X "PUT" -F="box=@my-box-file.box" http://localhost:8001/test/demo/1.0.0/virtualbox
@@ -90,8 +90,6 @@ Now run `vagrant up` and it will import version 1.0.0 of your box.
 Once it is running, all operations are done using HTTP. This can be done using a command line tool like cURL or the [boxserver frontend](https://github.com/trenker/boxserver-frontend)
 
 The response is always JSON
-
-## Commands
 
 Here is a list of commands and some examples.
 
