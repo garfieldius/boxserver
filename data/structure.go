@@ -8,7 +8,9 @@ type VagrantProvider string
 
 const (
 	Virtualbox VagrantProvider = "virtualbox"
-	Vmware     VagrantProvider = "vmware"
+	Vmware     VagrantProvider = "vmware_desktop"
+	Docker     VagrantProvider = "docker"
+	Hyperv     VagrantProvider = "hyperv"
 )
 
 type Data struct {
@@ -32,10 +34,17 @@ type Project struct {
 
 func ProviderByName(name string) (VagrantProvider, error) {
 	switch name {
-	case "virtualbox":
-		return Virtualbox, nil
-	case "vmware":
-		return Vmware, nil
+		case "virtualbox":
+			return Virtualbox, nil
+		case "vmware":
+		case "vmware_desktop":
+		case "vmware_workstation":
+		case "vmware_fusion":
+			return Vmware, nil
+		case "docker":
+			return Docker, nil
+		case "hyperv":
+			return Hyperv, nil
 	}
 
 	return Virtualbox, errors.New("No such provider")

@@ -15,7 +15,13 @@ var findComponents *regexp.Regexp
 func init() {
 	divider := `\` + (string)(os.PathSeparator)
 	validKey := `[a-z0-9][a-z0-9_\-]*[a-z0-9]`
-	allowedBoxes := `(` + (string)(Virtualbox) + "|" + (string)(Vmware) + ")"
+	providers := []string{
+		string(Virtualbox),
+		string(Vmware),
+		string(Docker),
+		string(Hyperv),
+	}
+	allowedBoxes := `(` + strings.Join(providers, "|") + ")"
 	validVersion := `[0-9]+\.[0-9]+\.[0-9]+`
 
 	findComponents = regexp.MustCompile(
