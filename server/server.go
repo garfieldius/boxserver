@@ -54,6 +54,8 @@ func NewRequest(req *http.Request) *request {
 		content, status = handleDelete(path)
 	}
 
+	// Options is only used as a ping, to see if the server lives
+	// so always answer with no body but an OK header
 	if req.Method == "OPTIONS" {
 		status = http.StatusOK
 	}

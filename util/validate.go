@@ -14,11 +14,11 @@ func init() {
 }
 
 func ValidKey(key string) bool {
-	return validIdentifier.Match(([]byte)(key))
+	return validIdentifier.Match([]byte(key))
 }
 
 func ValidVersion(version string) bool {
-	return validVersion.Match(([]byte)(version))
+	return validVersion.Match([]byte(version))
 }
 
 func ValidProvider(provider string) bool {

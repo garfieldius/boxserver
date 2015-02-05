@@ -59,7 +59,7 @@ func AddFromPath(path string, info os.FileInfo) {
 
 			log.Debug("Found box %s", parts)
 
-			providerName := (VagrantProvider)(parts[3])
+			providerName, _ := ProviderByName(parts[3])
 
 			var p *Project
 			var b *Box
@@ -90,13 +90,17 @@ func AddFromPath(path string, info os.FileInfo) {
 	}
 }
 
-func Initialize(basePath string) *Data {
-	prefix = basePath + (string)(os.PathSeparator)
-
+func LoadData() {
 	data = new(Data)
 	data.Projects = make([]Project, 0)
 
 	filepath.Walk(basePath, readFile)
+}
+
+func Initialize(basePath string) *Data {
+	prefix = basePath + string(os.PathSeparator)
+
+	LoadData()
 
 	return data
 }

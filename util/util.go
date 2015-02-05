@@ -14,5 +14,5 @@ func FileExists(filename string) bool {
 }
 
 func Join(parts ...string) string {
-	return strings.Join(([]string)(parts), (string)(os.PathSeparator))
+	return strings.Join([]string(parts), string(os.PathSeparator))
 }

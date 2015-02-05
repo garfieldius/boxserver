@@ -158,9 +158,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			return util.Str("Not a valid source ID"), status
 		}
 
-		_, err := data.ProviderByName(parts[3])
-
-		if err != nil {
+		if !util.ValidProvider(parts[3]) {
 			return util.Str("No such provider"), status
 		}
 
@@ -174,7 +172,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			return util.Str("Cannot read box upload file"), status
 		}
 
-		err = os.MkdirAll(targetDir, (os.FileMode)(0755))
+		err = os.MkdirAll(targetDir, os.FileMode(0755))
 
 		if err != nil {
 			log.Error("Cannot create target dir %s: %s", targetDir, err)
