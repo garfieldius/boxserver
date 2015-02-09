@@ -36,10 +36,7 @@ func ProviderByName(name string) (VagrantProvider, error) {
 	switch name {
 		case "virtualbox":
 			return Virtualbox, nil
-		case "vmware":
-		case "vmware_desktop":
-		case "vmware_workstation":
-		case "vmware_fusion":
+		case "vmware", "vmware_desktop", "vmware_workstation", "vmware_fusion":
 			return Vmware, nil
 		case "docker":
 			return Docker, nil

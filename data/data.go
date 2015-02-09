@@ -24,15 +24,15 @@ func init() {
 	allowedBoxes := `(` + strings.Join(providers, "|") + ")"
 	validVersion := `[0-9]+\.[0-9]+\.[0-9]+`
 
-log.Debug(`^` +
-	validKey +
-	divider +
-	validKey +
-	divider +
-	validVersion +
-	divider +
-	allowedBoxes +
-	`\.box$`)
+	log.Debug("Boxes regex check is %s", `^` +
+		validKey +
+		divider +
+		validKey +
+		divider +
+		validVersion +
+		divider +
+		allowedBoxes +
+		`\.box$`)
 
 	findComponents = regexp.MustCompile(
 		`^` +
@@ -95,6 +95,7 @@ func AddFromPath(path string, info os.FileInfo) {
 				v = b.addVersion(Version{Version: parts[2], Providers: make([]VagrantProvider, 0)})
 			}
 
+			log.Debug("Add provider %s", providerName)
 			v.addProvider(providerName)
 		}
 	}
@@ -103,6 +104,8 @@ func AddFromPath(path string, info os.FileInfo) {
 func LoadData() {
 	data = new(Data)
 	data.Projects = make([]Project, 0)
+
+	log.Debug("Search for box files in %s", prefix)
 
 	filepath.Walk(prefix, readFile)
 }
