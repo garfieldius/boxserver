@@ -44,25 +44,15 @@ func NewRequest(req *http.Request) *request {
 
 	log.Debug("Requested '%s' %s", req.Method, path)
 
-	if req.Method == "PUT" || req.Method == "POST" {
-		log.Debug("Handle PUT/POST")
-		content, status = handlePut(path, req)
-	}
-
-	if req.Method == "DELETE" {
-		log.Debug("Handle DELETE")
-		content, status = handleDelete(path)
-	}
-
-	// Options is only used as a ping, to see if the server lives
-	// so always answer with no body but an OK header
-	if req.Method == "OPTIONS" {
-		status = http.StatusOK
-	}
-
-	if req.Method == "GET" || req.Method == "HEAD" || req.Method == "" {
-		log.Debug("Handle GET")
-		content, status = handleGet(path)
+	switch req.Method {
+		case "PUT", "POST":
+			content, status = handlePut(path, req)
+		case "DELETE":
+			content, status = handleDelete(path)
+		case "OPTIONS":
+			status = http.StatusOK
+		case "GET", "HEAD", "":
+			content, status = handleGet(path)
 	}
 
 	return &request{
