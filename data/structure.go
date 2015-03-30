@@ -17,9 +17,14 @@ type Data struct {
 	Projects []Project
 }
 
+type Provider struct {
+	Type VagrantProvider
+	File string
+}
+
 type Version struct {
 	Version   string
-	Providers []VagrantProvider
+	Providers []Provider
 }
 
 type Box struct {
@@ -101,7 +106,7 @@ func (v *Version) Len() int {
 	return len(v.Providers)
 }
 
-func (v *Version) addProvider(provider VagrantProvider) *VagrantProvider {
-	v.Providers = append(v.Providers, provider)
+func (v *Version) addProvider(provider VagrantProvider, file string) *Provider {
+	v.Providers = append(v.Providers, Provider{Type: provider, File: file})
 	return &v.Providers[len(v.Providers)-1]
 }

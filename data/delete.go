@@ -99,10 +99,10 @@ func DeleteProvider(projectName, boxName, version string, provider VagrantProvid
 						if v.Version == version {
 
 							found := false
-							newProviders := make([]VagrantProvider, 0)
+							newProviders := make([]Provider, 0)
 
 							for _, pr := range v.Providers {
-								if pr == provider {
+								if pr.Type == provider {
 									found = true
 								} else {
 									newProviders = append(newProviders, pr)

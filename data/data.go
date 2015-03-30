@@ -92,11 +92,13 @@ func AddFromPath(path string, info os.FileInfo) {
 			v = b.getVersion(parts[2])
 
 			if v == nil {
-				v = b.addVersion(Version{Version: parts[2], Providers: make([]VagrantProvider, 0)})
+				v = b.addVersion(Version{Version: parts[2], Providers: make([]Provider, 0)})
 			}
 
-			log.Debug("Add provider %s", providerName)
-			v.addProvider(providerName)
+			file := strings.TrimPrefix(path, prefix)
+
+			log.Debug("Add provider %s for %s", providerName, file)
+			v.addProvider(providerName, file)
 		}
 	}
 }

@@ -81,11 +81,11 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		files := make([]pendingFile, len(srcVersion.Providers))
 
 		for i, p := range srcVersion.Providers {
-			providerfile := string(p) + ".box"
+			providerfile := string(p.Type) + ".box"
 
 			f := pendingFile{
 				targetPath: util.Join(conf.Get().Data, parts[0], parts[1], parts[2]),
-				tempPath:   util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + string(p) + ".tmp"),
+				tempPath:   util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + string(p.Type) + ".tmp"),
 				srcPath:    util.Join(conf.Get().Data, src[0], src[1], src[2]),
 				name:       providerfile,
 			}

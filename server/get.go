@@ -112,10 +112,10 @@ func buildVagrantData(project, box string, versions []d.Version) *VagrantBox {
 		}
 
 		for _, p := range v.Providers {
-			providerName := (string)(p)
+			providerName := string(p.Type)
 			nP := VagrantProvider{
 				Name: providerName,
-				Url:  makeUrl(project, box, v.Version, providerName),
+				Url:  makeUrl(p.File),
 			}
 			nV.Providers = append(nV.Providers, nP)
 		}
@@ -126,15 +126,14 @@ func buildVagrantData(project, box string, versions []d.Version) *VagrantBox {
 	return vagrant
 }
 
-func makeUrl(project, box, version, provider string) string {
+func makeUrl(file string) string {
 	url := c.Get().BaseUrl
 
 	if !strings.HasSuffix(url, "/") {
 		url += "/"
 	}
 
-	parts := []string{project, box, version, provider}
-	url += strings.Join(parts, "/") + ".box"
+	url += file
 
 	return url
 }
