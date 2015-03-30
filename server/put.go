@@ -13,6 +13,7 @@ import (
 
 type pendingFile struct {
 	targetPath string
+	tempPath   string
 	srcPath    string
 	name       string
 }
@@ -80,10 +81,11 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		files := make([]pendingFile, len(srcVersion.Providers))
 
 		for i, p := range srcVersion.Providers {
-			providerfile := (string)(p) + ".box"
+			providerfile := string(p) + ".box"
 
 			f := pendingFile{
 				targetPath: util.Join(conf.Get().Data, parts[0], parts[1], parts[2]),
+				tempPath:   util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + string(p) + ".tmp"),
 				srcPath:    util.Join(conf.Get().Data, src[0], src[1], src[2]),
 				name:       providerfile,
 			}
@@ -112,6 +114,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			}
 
 			srcFile := util.Join(file.srcPath, file.name)
+			tmpFile := file.tempPath
 			dstFile := util.Join(file.targetPath, file.name)
 
 			src, err := os.Open(srcFile)
@@ -122,21 +125,22 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 				return util.Str("Cannot open source file"), http.StatusInternalServerError
 			}
 
-			dst, err := os.Create(dstFile)
-			defer dst.Close()
+			dst, err := os.Create(tmpFile)
 
 			if err != nil {
-				log.Error("Create target file %s: %s", dstFile, err)
+				log.Error("Create target file %s: %s", tmpFile, err)
 				return util.Str("Cannot open target file"), http.StatusInternalServerError
 			}
 
 			_, err = io.Copy(dst, src)
+			dst.Close()
 
 			if err != nil {
 				log.Error("Copy from %s to %s: %s", srcFile, dstFile, err)
 				return util.Str("Cannot copy to target file"), http.StatusInternalServerError
 			}
 
+			os.Rename(tmpFile, dstFile)
 			info, err := os.Stat(dstFile)
 
 			if err != nil {
@@ -164,6 +168,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 
 		targetDir := util.Join(conf.Get().Data, parts[0], parts[1], parts[2])
 		targetFile := parts[3] + ".box"
+		tempFile := util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + parts[3] + ".tmp")
 
 		_, srcH, err := req.FormFile("box")
 
@@ -179,8 +184,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			return util.Str("Cannot create target directory"), http.StatusInternalServerError
 		}
 
-		dstFile := util.Join(targetDir, targetFile)
-		dst, err := os.Create(dstFile)
+		dst, err := os.Create(tempFile)
 
 		if err != nil {
 			log.Error("Cannot create target file %s: %s", util.Join(targetDir, targetFile), err)
@@ -199,9 +203,12 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 		_, err = io.Copy(dst, src)
 
 		if err != nil {
-			log.Error("Copy from %s to %s: %s", srcH, dstFile, err)
+			log.Error("Copy from %s to %s: %s", srcH, tempFile, err)
 			return util.Str("Cannot copy to target file"), http.StatusInternalServerError
 		}
+
+		dstFile := util.Join(targetDir, targetFile)
+		os.Rename(tempFile, dstFile)
 
 		info, err := os.Stat(dstFile)
 
