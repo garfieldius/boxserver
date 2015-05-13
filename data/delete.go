@@ -3,7 +3,7 @@ package data
 import "errors"
 
 func DeleteProject(projectName string) error {
-	newProjects := make([]Project, 0)
+	newProjects := make([]*Project, 0)
 	found := false
 
 	for _, p := range data.Projects {
@@ -27,7 +27,7 @@ func DeleteBox(projectName, boxName string) error {
 	for i, p := range data.Projects {
 		if p.Name == projectName {
 
-			newBoxes := make([]Box, 0)
+			newBoxes := make([]*Box, 0)
 			found := false
 
 			for _, b := range p.Boxes {
@@ -61,7 +61,7 @@ func DeleteVersion(projectName, boxName, version string) error {
 			for j, b := range p.Boxes {
 				if b.Name == boxName {
 					found := false
-					newVersions := make([]Version, 0)
+					newVersions := make([]*Version, 0)
 
 					for _, v := range b.Versions {
 						if v.Version == version {
@@ -99,7 +99,7 @@ func DeleteProvider(projectName, boxName, version string, provider VagrantProvid
 						if v.Version == version {
 
 							found := false
-							newProviders := make([]Provider, 0)
+							newProviders := make([]*Provider, 0)
 
 							for _, pr := range v.Providers {
 								if pr.Type == provider {

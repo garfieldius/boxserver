@@ -24,7 +24,7 @@ func init() {
 	allowedBoxes := `(` + strings.Join(providers, "|") + ")"
 	validVersion := `[0-9]+\.[0-9]+\.[0-9]+`
 
-	log.Debug("Boxes regex check is %s", `^` +
+	completeRegex := `^` +
 		validKey +
 		divider +
 		validKey +
@@ -32,18 +32,11 @@ func init() {
 		validVersion +
 		divider +
 		allowedBoxes +
-		`\.box$`)
+		`\.box$`
 
-	findComponents = regexp.MustCompile(
-		`^` +
-			validKey +
-			divider +
-			validKey +
-			divider +
-			validVersion +
-			divider +
-			allowedBoxes +
-			`\.box$`)
+	log.Debug("Boxes regex check is %s", completeRegex)
+
+	findComponents = regexp.MustCompile(completeRegex)
 }
 
 func readFile(path string, info os.FileInfo, err error) error {
@@ -80,19 +73,22 @@ func AddFromPath(path string, info os.FileInfo) {
 			p = data.getProject(parts[0])
 
 			if p == nil {
-				p = data.addProject(Project{Name: parts[0], Boxes: make([]Box, 0)})
+				p = &Project{Name: parts[0], Boxes: make([]*Box, 0)}
+				data.addProject(p)
 			}
 
 			b = p.getBox(parts[1])
 
 			if b == nil {
-				b = p.addBox(Box{Name: parts[1], Versions: make([]Version, 0)})
+				b = &Box{Name: parts[1], Versions: make([]*Version, 0)}
+				p.addBox(b)
 			}
 
 			v = b.getVersion(parts[2])
 
 			if v == nil {
-				v = b.addVersion(Version{Version: parts[2], Providers: make([]Provider, 0)})
+				v = &Version{Version: parts[2], Providers: make([]*Provider, 0)}
+				b.addVersion(v)
 			}
 
 			file := strings.TrimPrefix(path, prefix)
@@ -105,7 +101,7 @@ func AddFromPath(path string, info os.FileInfo) {
 
 func LoadData() {
 	data = new(Data)
-	data.Projects = make([]Project, 0)
+	data.Projects = make([]*Project, 0)
 
 	log.Debug("Search for box files in %s", prefix)
 

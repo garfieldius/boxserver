@@ -81,39 +81,39 @@ type VagrantProvider struct {
 }
 
 type VagrantVersion struct {
-	Version   string            `json:"version"`
-	Status    string            `json:"status"`
-	Html      string            `json:"description_html"`
-	Md        string            `json:"description_markdown"`
-	Providers []VagrantProvider `json:"providers"`
+	Version   string             `json:"version"`
+	Status    string             `json:"status"`
+	Html      string             `json:"description_html"`
+	Md        string             `json:"description_markdown"`
+	Providers []*VagrantProvider `json:"providers"`
 }
 
 type VagrantBox struct {
-	Description string           `json:"description"`
-	Short       string           `json:"short_description"`
-	Name        string           `json:"name"`
-	Versions    []VagrantVersion `json:"versions"`
+	Description string            `json:"description"`
+	Short       string            `json:"short_description"`
+	Name        string            `json:"name"`
+	Versions    []*VagrantVersion `json:"versions"`
 }
 
-func buildVagrantData(project, box string, versions []d.Version) *VagrantBox {
+func buildVagrantData(project, box string, versions []*d.Version) *VagrantBox {
 	vagrant := &VagrantBox{
 		Name:        project + "/" + box,
 		Short:       "",
 		Description: "",
-		Versions:    make([]VagrantVersion, 0),
+		Versions:    make([]*VagrantVersion, 0),
 	}
 
 	for _, v := range versions {
 
-		nV := VagrantVersion{
+		nV := &VagrantVersion{
 			Version:   v.Version,
 			Status:    "active",
-			Providers: make([]VagrantProvider, 0),
+			Providers: make([]*VagrantProvider, 0),
 		}
 
 		for _, p := range v.Providers {
 			providerName := string(p.Type)
-			nP := VagrantProvider{
+			nP := &VagrantProvider{
 				Name: providerName,
 				Url:  makeUrl(p.File),
 			}

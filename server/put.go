@@ -61,7 +61,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 			return util.Str("Source box not found"), http.StatusNotFound
 		}
 
-		var srcVersion data.Version
+		var srcVersion *data.Version
 		foundVersion := false
 
 		for _, b := range versionsOfBox {
@@ -85,7 +85,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 
 			f := pendingFile{
 				targetPath: util.Join(conf.Get().Data, parts[0], parts[1], parts[2]),
-				tempPath:   util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + string(p.Type) + ".tmp"),
+				tempPath:   util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "."+string(p.Type)+".tmp"),
 				srcPath:    util.Join(conf.Get().Data, src[0], src[1], src[2]),
 				name:       providerfile,
 			}
@@ -168,7 +168,7 @@ func handlePut(parts []string, req *http.Request) (util.Message, int) {
 
 		targetDir := util.Join(conf.Get().Data, parts[0], parts[1], parts[2])
 		targetFile := parts[3] + ".box"
-		tempFile := util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "." + parts[3] + ".tmp")
+		tempFile := util.Join(conf.Get().Data, parts[0], parts[1], parts[2], "."+parts[3]+".tmp")
 
 		_, srcH, err := req.FormFile("box")
 

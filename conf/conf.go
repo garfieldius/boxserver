@@ -41,6 +41,8 @@ func Load(filename string) *Config {
 		log.Critical("Cannot load file %s, %s", filename, err)
 	}
 
+	mainConfig = new(Config)
+
 	err = json.Unmarshal(data, mainConfig)
 
 	if err != nil {

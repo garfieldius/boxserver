@@ -29,7 +29,7 @@ func BoxesOfProject(project string) ([]string, error) {
 	return r, nil
 }
 
-func VersionsOfBox(project, box string) ([]Version, error) {
+func VersionsOfBox(project, box string) ([]*Version, error) {
 	p := data.getProject(project)
 
 	if p == nil {
@@ -42,8 +42,5 @@ func VersionsOfBox(project, box string) ([]Version, error) {
 		return nil, errors.New("No such box")
 	}
 
-	r := make([]Version, len(b.Versions))
-	copy(r, b.Versions)
-
-	return r, nil
+	return b.Versions, nil
 }

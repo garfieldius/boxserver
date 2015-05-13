@@ -14,7 +14,7 @@ const (
 )
 
 type Data struct {
-	Projects []Project
+	Projects []*Project
 }
 
 type Provider struct {
@@ -24,43 +24,43 @@ type Provider struct {
 
 type Version struct {
 	Version   string
-	Providers []Provider
+	Providers []*Provider
 }
 
 type Box struct {
 	Name     string
-	Versions []Version
+	Versions []*Version
 }
 
 type Project struct {
 	Name  string
-	Boxes []Box
+	Boxes []*Box
 }
 
 func ProviderByName(name string) (VagrantProvider, error) {
 	switch name {
-		case "virtualbox":
-			return Virtualbox, nil
-		case "vmware", "vmware_desktop", "vmware_workstation", "vmware_fusion":
-			return Vmware, nil
-		case "docker":
-			return Docker, nil
-		case "hyperv":
-			return Hyperv, nil
+	case "virtualbox":
+		return Virtualbox, nil
+	case "vmware", "vmware_desktop", "vmware_workstation", "vmware_fusion":
+		return Vmware, nil
+	case "docker":
+		return Docker, nil
+	case "hyperv":
+		return Hyperv, nil
 	}
 
 	return Virtualbox, errors.New("No such provider")
 }
 
-func (d *Data) addProject(project Project) *Project {
+func (d *Data) addProject(project *Project) *Project {
 	d.Projects = append(d.Projects, project)
-	return &d.Projects[d.Len()-1]
+	return project
 }
 
 func (d *Data) getProject(name string) *Project {
 	for i, p := range d.Projects {
 		if p.Name == name {
-			return &d.Projects[i]
+			return d.Projects[i]
 		}
 	}
 	return nil
@@ -70,15 +70,15 @@ func (d *Data) Len() int {
 	return len(d.Projects)
 }
 
-func (p *Project) addBox(box Box) *Box {
+func (p *Project) addBox(box *Box) *Box {
 	p.Boxes = append(p.Boxes, box)
-	return &p.Boxes[len(p.Boxes)-1]
+	return box
 }
 
 func (p *Project) getBox(box string) *Box {
 	for i, b := range p.Boxes {
 		if b.Name == box {
-			return &p.Boxes[i]
+			return p.Boxes[i]
 		}
 	}
 	return nil
@@ -88,15 +88,15 @@ func (b *Box) Len() int {
 	return len(b.Versions)
 }
 
-func (b *Box) addVersion(version Version) *Version {
+func (b *Box) addVersion(version *Version) *Version {
 	b.Versions = append(b.Versions, version)
-	return &b.Versions[len(b.Versions)-1]
+	return version
 }
 
 func (b *Box) getVersion(version string) *Version {
 	for i, v := range b.Versions {
 		if v.Version == version {
-			return &b.Versions[i]
+			return b.Versions[i]
 		}
 	}
 	return nil
@@ -107,6 +107,7 @@ func (v *Version) Len() int {
 }
 
 func (v *Version) addProvider(provider VagrantProvider, file string) *Provider {
-	v.Providers = append(v.Providers, Provider{Type: provider, File: file})
-	return &v.Providers[len(v.Providers)-1]
+	p := &Provider{Type: provider, File: file}
+	v.Providers = append(v.Providers, p)
+	return p
 }
