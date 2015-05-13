@@ -1,7 +1,12 @@
 {
-	"baseUrl": "http://localhost/boxdata/",
+	"baseUrl": "http://localhost:8001/_box/",
 	"port": "8001",
 	"proxy": "",
-	"data": "/www/boxdata",
-	"cors": "*"
+	"data": "/var/www/boxserver/boxes",
+	"cors": "*",
+	"server": {
+		"enable": true,
+		"prefix": "/_box/",
+		"baseDir": "/var/www/boxserver"
+	}
 }

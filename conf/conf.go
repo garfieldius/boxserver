@@ -15,6 +15,13 @@ type Config struct {
 	Port    string
 	Data    string
 	Cors    string
+	Server  Server
+}
+
+type Server struct {
+	Enable  bool
+	BaseDir string
+	Prefix  string
 }
 
 func init() {

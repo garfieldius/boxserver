@@ -23,6 +23,11 @@ func main() {
 	log.Debug("Loading data")
 	data.Initialize(conf.Get().Data)
 
+	if conf.Get().Server.Enable {
+		log.Debug("Register fileserver of route %s for directory %s", conf.Get().Server.Prefix, conf.Get().Server.BaseDir)
+		http.Handle(conf.Get().Server.Prefix, http.StripPrefix(conf.Get().Server.Prefix, http.FileServer(http.Dir(conf.Get().Server.BaseDir))))
+	}
+
 	log.Debug("Register request handler")
 	http.Handle("/", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		server.NewRequest(req).Process(res)
