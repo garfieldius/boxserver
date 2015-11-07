@@ -78,6 +78,7 @@ func handleGet(parts []string) (interface{}, int) {
 type VagrantProvider struct {
 	Name string `json:"name"`
 	Url  string `json:"url"`
+	Size string `json:"size"`
 }
 
 type VagrantVersion struct {
@@ -116,6 +117,7 @@ func buildVagrantData(project, box string, versions []*d.Version) *VagrantBox {
 			nP := &VagrantProvider{
 				Name: providerName,
 				Url:  makeUrl(p.File),
+				Size: p.Size,
 			}
 			nV.Providers = append(nV.Providers, nP)
 		}

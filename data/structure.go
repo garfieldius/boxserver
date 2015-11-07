@@ -20,6 +20,7 @@ type Data struct {
 type Provider struct {
 	Type VagrantProvider
 	File string
+	Size string
 }
 
 type Version struct {
@@ -106,7 +107,7 @@ func (v *Version) Len() int {
 	return len(v.Providers)
 }
 
-func (v *Version) addProvider(provider VagrantProvider, file string) *Provider {
+func (v *Version) addProvider(provider VagrantProvider, file, size string) *Provider {
 	p := &Provider{Type: provider, File: file}
 	v.Providers = append(v.Providers, p)
 	return p
