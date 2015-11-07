@@ -10,7 +10,6 @@ const (
 	Virtualbox  VagrantProvider = "virtualbox"
 	Vmware      VagrantProvider = "vmware_desktop"
 	Docker      VagrantProvider = "docker"
-	DockerImage VagrantProvider = "docker_image"
 	Hyperv      VagrantProvider = "hyperv"
 )
 
@@ -46,8 +45,6 @@ func ProviderByName(name string) (VagrantProvider, error) {
 		return Vmware, nil
 	case "docker":
 		return Docker, nil
-	case "docker_image":
-		return DockerImage, nil
 	case "hyperv":
 		return Hyperv, nil
 	}

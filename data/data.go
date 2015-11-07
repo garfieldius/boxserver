@@ -18,7 +18,7 @@ func init() {
 	providers := []string{
 		string(Virtualbox),
 		string(Vmware), "vmware", "vmware_fusion", "vmware_workstation",
-		string(Docker), "docker_image",
+		string(Docker),
 		string(Hyperv),
 	}
 	allowedBoxes := `(` + strings.Join(providers, "|") + ")"
