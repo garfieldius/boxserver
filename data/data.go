@@ -1,13 +1,12 @@
 package data
 
 import (
+	humanize "github.com/dustin/go-humanize"
 	"github.com/trenker/boxserver/log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
-	"math"
-	"fmt"
 )
 
 var data *Data
@@ -96,37 +95,9 @@ func AddFromPath(path string, info os.FileInfo) {
 			file := strings.TrimPrefix(path, prefix)
 
 			log.Debug("Add provider %s for %s", providerName, file)
-			v.addProvider(providerName, file, humanReadableSize(float64(info.Size())))
+			v.addProvider(providerName, file, humanize.Bytes(uint64(info.Size())))
 		}
 	}
-}
-
-func humanReadableSize(bytes float64) string {
-	unit := float64(1000)
-
-	if bytes < unit {
-		return fmt.Sprintf("%.0f Byte", bytes)
-	}
-
-	exp := float64(math.Log(bytes) / math.Log(unit))
-	pre := "KMGTPE"[int(exp)-1];
-
-	return fmt.Sprintf("%.2f %sB", round(bytes / math.Pow(unit, exp), 2), pre);
-}
-
-func round(val float64, places int) (newVal float64) {
-	roundOn := float64(0.5)
-	var round float64
-	pow := math.Pow(10, float64(places))
-	digit := pow * val
-	_, div := math.Modf(digit)
-	if div >= roundOn {
-		round = math.Ceil(digit)
-	} else {
-		round = math.Floor(digit)
-	}
-	newVal = round / pow
-	return
 }
 
 func LoadData() {

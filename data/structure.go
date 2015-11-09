@@ -108,7 +108,7 @@ func (v *Version) Len() int {
 }
 
 func (v *Version) addProvider(provider VagrantProvider, file, size string) *Provider {
-	p := &Provider{Type: provider, File: file}
+	p := &Provider{Type: provider, File: file, Size: size}
 	v.Providers = append(v.Providers, p)
 	return p
 }
